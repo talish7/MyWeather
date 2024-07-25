@@ -1,6 +1,7 @@
 package com.tian.myweather.ui.widgets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -28,10 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.I
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.tian.myweather.data.CityMap
 import com.tian.myweather.ui.viewmodel.DayWeatherModel
-import com.tian.myweather.ui.viewmodel.TimeWeatherModel
+import com.tian.myweather.ui.viewmodel.HourWeatherModel
+import com.tian.myweather.ui.viewmodel.NowWeatherModel
 
 /**
  * @Author: tian7
@@ -40,77 +46,64 @@ import com.tian.myweather.ui.viewmodel.TimeWeatherModel
  * @Description: 描述
  */
 @Composable
-fun DropdownMenuSample (modifier: Modifier,dayWeatherModel: DayWeatherModel,timeWeatherModel: TimeWeatherModel){
+fun DropdownMenuSample(
+    modifier: Modifier,
+    dayWeatherModel: DayWeatherModel,
+    hourWeatherModel: HourWeatherModel,
+    nowWeatherModel: NowWeatherModel
+) {
 
     var expanded by remember { mutableStateOf(false) }
     val cityMap = CityMap.getCityMap()
     var selectedId by remember { dayWeatherModel.cityId }
+
     LaunchedEffect(selectedId) {
         dayWeatherModel.getDayWeather(selectedId)
-        timeWeatherModel.getTimeWeather(selectedId)
+        hourWeatherModel.getTimeWeather(selectedId)
         dayWeatherModel.cityName.value = cityMap[selectedId]!!
+        nowWeatherModel.getNowWeather(selectedId)
     }
-        Box {
-            Row(
-                modifier = Modifier.padding(start = 10.dp, top = 30.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = cityMap[selectedId]!!, color = Color.White)
-                Spacer(modifier = Modifier.size(50.dp))
-                IconButton(
-                    onClick = {
-                        expanded = true
-                    }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowDropDown,
-                        contentDescription = "Dropdown",
-                        tint = Color.White
-                    )
-                }
 
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {
+    Box(modifier = modifier) {
+        Row {
+            Column {
+                Row(
+                    modifier= Modifier.clickable {
                         expanded = true
                     },
-                    modifier = Modifier.padding(end = 10.dp)
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Dropdown",
-                        tint = Color.White
-                    )
-                }
-
-            }
-            Column(modifier = Modifier.background(Color.Transparent)){
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = {
-                            expanded = false
-                        },
-                        modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .background(Color.Transparent),
-                    ) {
-                        Spacer(modifier = Modifier.height(30.dp))
-                        cityMap.forEach {
-                            DropdownMenuItem(
-                                text = { Text(text = it.value, color = Color.Black) },
-                                onClick = {
-                                    selectedId = it.key
-                                    dayWeatherModel.cityId.value = it.key
-                                    timeWeatherModel.cityId.value = it.key
-                                    expanded = false
-                                },
-
-                            )
-                        }
+                    Text(text = cityMap[selectedId]!!, color = Color.White, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.width(60.dp))
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "Setting", tint = Color.White)
                     }
                 }
 
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    },
+                ) {
+                    cityMap.forEach {
+                        DropdownMenuItem(
+                            text = { Text(text = it.value, color = Color.Black) },
+                            onClick = {
+                                selectedId = it.key
+                                dayWeatherModel.cityId.value = it.key
+                                hourWeatherModel.cityId.value = it.key
+                                expanded = false
+                            },
+                        )
+                    }
+                }
             }
+        }
+
+
+    }
+
 
 
 

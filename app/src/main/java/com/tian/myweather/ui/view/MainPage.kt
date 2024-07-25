@@ -1,6 +1,7 @@
 package com.tian.myweather.ui.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,25 +17,37 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tian.myweather.R
+import com.tian.myweather.data.CityMap
 import com.tian.myweather.ui.viewmodel.DayWeatherModel
-import com.tian.myweather.ui.viewmodel.TimeWeatherModel
+import com.tian.myweather.ui.viewmodel.HourWeatherModel
+import com.tian.myweather.ui.viewmodel.NowWeatherModel
 import com.tian.myweather.ui.widgets.DropdownMenuSample
 import com.tian.myweather.utils.DateUtils
-import kotlin.text.Typography.tm
 
 /**
  * @Author: tian7
@@ -45,7 +58,8 @@ import kotlin.text.Typography.tm
 @Composable
 fun MainPage(
     dayWeatherModel: DayWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    timeWeatherModel: TimeWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    hourWeatherModel: HourWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    nowWeatherModel: NowWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     var result by remember {
         dayWeatherModel.result
@@ -63,33 +77,57 @@ fun MainPage(
         dayWeatherModel.todayWeather
     }
 
-    var timeResult by remember {
-        timeWeatherModel.result
+    var hourResult by remember {
+        hourWeatherModel.result
     }
+
+    var nowResult by remember {
+        nowWeatherModel.result
+    }
+
 
     LaunchedEffect(Unit) {
         dayWeatherModel.getDayWeather("101010100")
-        timeWeatherModel.getTimeWeather("101010100")
+        hourWeatherModel.getTimeWeather("101010100")
+        nowWeatherModel.getNowWeather("101010100")
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.tmp_bg),
             contentDescription = "bg",
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
+
         Box {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(top = 30.dp, start = 20.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                DropdownMenuSample(
-                    modifier = Modifier.fillMaxWidth(),
-                    dayWeatherModel,
-                    timeWeatherModel
-                )
+                Row {
+                    DropdownMenuSample(
+                        modifier = Modifier,
+                        dayWeatherModel = dayWeatherModel,
+                        hourWeatherModel = hourWeatherModel,
+                        nowWeatherModel = nowWeatherModel
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = {
+
+                        },
+                        modifier = Modifier.padding(end = 20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.size(20.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = cityName, fontSize = 30.sp, color = Color.White)
@@ -100,7 +138,7 @@ fun MainPage(
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "22", fontSize = 90.sp, color = Color.White)
+                    Text(text = "${nowResult?.now?.temp}", fontSize = 90.sp, color = Color.White)
                     Column {
                         Text(text = "℃", fontSize = 35.sp, color = Color.White)
                         Spacer(modifier = Modifier.height(30.dp))
@@ -132,9 +170,9 @@ fun MainPage(
                 Spacer(modifier = Modifier.size(20.dp))
                 Box {
                     LazyRow {
-                        timeResult?.hourly?.let {
+                        hourResult?.hourly?.let {
                             items(it.size) { index ->
-                                timeResult!!.hourly?.get(index)?.let {
+                                hourResult!!.hourly?.get(index)?.let {
                                     Column{
                                         if (it.time!=null){
                                             Text(
