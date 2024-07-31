@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.tian.myweather.config.Config.API_KEY
 import com.tian.myweather.data.DataRepository
 import com.tian.myweather.data.bean.WeekWeatherBean
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -16,6 +18,8 @@ import kotlinx.coroutines.launch
  * @Description: 描述
  */
 class WeekWeatherModel: ViewModel() {
+    private val _weekWeathers = MutableStateFlow<WeekWeatherBean?>(null)
+    val weekWeathers = _weekWeathers.asStateFlow()
 
     val cityId = mutableStateOf("101010100")
     val cityName = mutableStateOf("北京")
@@ -35,6 +39,7 @@ class WeekWeatherModel: ViewModel() {
                     todayWeather.value = response.daily?.get(0)?.textDay.toString()
                     icon.value = response.daily?.get(0)?.iconDay.toString()
                     result.value = response
+                    _weekWeathers.value = response
                     dLog("result: $result")
                 }
             }else{

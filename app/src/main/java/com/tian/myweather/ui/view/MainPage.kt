@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,9 +61,11 @@ fun MainPage(
     nowWeatherModel: NowWeatherModel = viewModel()
 ) {
     //7天
-    var result by remember {
-        weekWeatherModel.result
-    }
+//    var result by remember {
+//        weekWeatherModel.result
+//    }
+    val result by weekWeatherModel.weekWeathers.collectAsState()
+
     //今天
     var tempMin by remember {
         weekWeatherModel.tempMin
