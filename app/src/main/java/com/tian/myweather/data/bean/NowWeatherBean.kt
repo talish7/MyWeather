@@ -8,16 +8,14 @@ import com.google.gson.annotations.SerializedName
  * @Date: on 2024/7/25: 23: 35
  * @Description: 描述
  */
-class NowWeatherBean {
+data class NowWeatherBean (
 
     @SerializedName("code")
-    var code: String? = null
+    val code: String? = null,
 
     @SerializedName("now")
-    var now: NowBean? = null
+    val now: NowBean? = null
+)
 
-    override fun toString(): String {
-        return "NowWeatherBean(code=$code, now=$now)"
-    }
 
-}
+

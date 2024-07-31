@@ -24,20 +24,17 @@ import com.google.gson.annotations.SerializedName
 //    "cloud": "0",
 //    "dew": "-25"
 //},
-class HourlyBean {
+data class HourlyBean (
 
     @SerializedName("fxTime")
-    var time: String? = null
+    var time: String? = null,
 
     @SerializedName("temp")
-    var temp: String? = null
+    var temp: String? = null,
+
+    @SerializedName("icon")
+    var icon: String? = null,
 
     @SerializedName("text")
     var weather: String? = null
-
-    override fun toString(): String {
-        return "HourlyBean(time=$time, temp=$temp, weather=$weather)"
-    }
-
-
-}
+)

@@ -1,5 +1,6 @@
 package com.tian.myweather.ui.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,40 +14,38 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tian.myweather.R
-import com.tian.myweather.ui.viewmodel.DayWeatherModel
 import com.tian.myweather.ui.viewmodel.HourWeatherModel
 import com.tian.myweather.ui.viewmodel.NowWeatherModel
+import com.tian.myweather.ui.viewmodel.WeekWeatherModel
 import com.tian.myweather.ui.widgets.DropdownMenuSample
 import com.tian.myweather.utils.DateUtils
 import com.tian.myweather.utils.getIconOfWeather
+import kotlinx.coroutines.launch
 
 /**
  * @Author: tian7
@@ -56,44 +55,42 @@ import com.tian.myweather.utils.getIconOfWeather
  */
 @Composable
 fun MainPage(
-    dayWeatherModel: DayWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    hourWeatherModel: HourWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    nowWeatherModel: NowWeatherModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    weekWeatherModel: WeekWeatherModel = viewModel(),
+    hourWeatherModel: HourWeatherModel = viewModel(),
+    nowWeatherModel: NowWeatherModel = viewModel()
 ) {
-    //今天
+    //7天
     var result by remember {
-        dayWeatherModel.result
+        weekWeatherModel.result
     }
+    //今天
     var tempMin by remember {
-        dayWeatherModel.tempMin
+        weekWeatherModel.tempMin
     }
     var tempMax by remember {
-        dayWeatherModel.tempMax
+        weekWeatherModel.tempMax
     }
     var cityName by remember {
-        dayWeatherModel.cityName
+        weekWeatherModel.cityName
     }
     var todayWeather by remember {
-        dayWeatherModel.todayWeather
+        weekWeatherModel.todayWeather
     }
-
     var icon by remember {
-        dayWeatherModel.icon
+        weekWeatherModel.icon
     }
-
-
+    //未来24小时
     var hourResult by remember {
         hourWeatherModel.result
     }
-
+    //实时
     var nowResult by remember {
         nowWeatherModel.result
     }
 
-
     LaunchedEffect(Unit) {
-        dayWeatherModel.getDayWeather("101010100")
-        hourWeatherModel.getTimeWeather("101010100")
+        weekWeatherModel.getWeekWeather("101010100")
+        hourWeatherModel.getHourWeather("101010100")
         nowWeatherModel.getNowWeather("101010100")
     }
 
@@ -104,7 +101,6 @@ fun MainPage(
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
-
         Box {
             Column(
                 modifier = Modifier.padding(top = 30.dp, start = 20.dp),
@@ -114,7 +110,7 @@ fun MainPage(
                 Row {
                     DropdownMenuSample(
                         modifier = Modifier,
-                        dayWeatherModel = dayWeatherModel,
+                        weekWeatherModel = weekWeatherModel,
                         hourWeatherModel = hourWeatherModel,
                         nowWeatherModel = nowWeatherModel
                     )
@@ -172,7 +168,7 @@ fun MainPage(
                     Text(text = "$todayWeather", fontSize = 20.sp, color = Color.White)
                     Spacer(modifier = Modifier.width(20.dp))
                     Icon(
-                        painterResource(id = getIconOfWeather(icon)) ,
+                        painterResource(id = getIconOfWeather(icon)),
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(22.dp)
@@ -181,18 +177,30 @@ fun MainPage(
                 Spacer(modifier = Modifier.size(20.dp))
                 Box {
                     Column {
-                        Text(text = "上次更新时间: 22:00", modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(20.dp), color = Color.White, fontSize = 12.sp)
+                        Text(
+                            text = "上次更新时间: ${
+                                DateUtils.extractTimeFromDateTimeStr(
+                                    hourResult?.hourly?.get(0)?.time.toString()
+                                )
+                            }", modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(end = 20.dp, bottom = 10.dp), color = Color.White, fontSize = 12.sp
+                        )
                         Divider(
-                            modifier = Modifier.padding(start = 10.dp, end = 20.dp))
+                            modifier = Modifier.padding(start = 10.dp, end = 20.dp)
+                        )
                         LazyRow {
                             nowResult?.now?.let {
-                                item{
+                                item {
                                     Column(
-                                        modifier = Modifier.padding(start = 10.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
+                                        modifier = Modifier.padding(
+                                            start = 10.dp,
+                                            end = 20.dp,
+                                            top = 20.dp,
+                                            bottom = 20.dp
+                                        ),
                                         horizontalAlignment = Alignment.CenterHorizontally
-                                    ){
+                                    ) {
                                         Text(
                                             text = "现在",
                                             fontSize = 20.sp,
@@ -200,7 +208,7 @@ fun MainPage(
                                         )
                                         Spacer(modifier = Modifier.size(10.dp))
                                         Icon(
-                                            painterResource(id = getIconOfWeather(icon)) ,
+                                            painterResource(id = getIconOfWeather(icon)),
                                             contentDescription = null,
                                             tint = Color.White,
                                             modifier = Modifier.size(22.dp)
@@ -222,25 +230,28 @@ fun MainPage(
                                         Column(
                                             modifier = Modifier.padding(20.dp),
                                             horizontalAlignment = Alignment.CenterHorizontally
-                                        ){
-                                            if (it.time!=null){
+                                        ) {
+                                            if (it.time != null) {
                                                 Text(
-                                                    text = "${DateUtils.extractTimeFromDateTimeStr(it.time!!)}",
+                                                    text = "${
+                                                        DateUtils.extractTimeFromDateTimeStr(
+                                                            it.time!!
+                                                        )
+                                                    }",
                                                     fontSize = 20.sp,
                                                     color = Color.White
                                                 )
                                             }
                                             Spacer(modifier = Modifier.size(10.dp))
-
                                             Icon(
-                                                painterResource(id = getIconOfWeather(icon)) ,
+                                                painterResource(id = getIconOfWeather(it.icon ?: " ")),
                                                 contentDescription = null,
                                                 tint = Color.White,
                                                 modifier = Modifier.size(22.dp)
                                             )
                                             Spacer(modifier = Modifier.size(10.dp))
                                             Text(
-                                                text = "${it.temp}℃",
+                                                text = "${it.temp ?: " "}℃",
                                                 fontSize = 20.sp,
                                                 color = Color.White
                                             )
@@ -253,78 +264,77 @@ fun MainPage(
 
 
                 }
-                    Box {
-                        Column {
-                            Divider(modifier = Modifier.padding(start = 10.dp, end = 20.dp))
-                            LazyRow {
-                                if (result?.daily != null) {
-                                    items(result?.daily!!.size) { index ->
-                                        result?.daily!![index]?.let {
-                                            Column(
-                                                modifier = Modifier.padding(start = 10.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
-                                                horizontalAlignment = Alignment.CenterHorizontally
-                                            ) {
-                                                if (index == 0) {
-                                                    Text(
-                                                        text = "今天",
-                                                        fontSize = 20.sp,
-                                                        color = Color.White
-                                                    )
-                                                } else {
-                                                    Text(
-                                                        text = "${DateUtils.getDayOfWeek(it.date)}",
-                                                        fontSize = 20.sp,
-                                                        color = Color.White
-                                                    )
-                                                }
-
-                                                Icon(
-                                                    painterResource(id = getIconOfWeather(icon)) ,
-                                                    contentDescription = null,
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(22.dp)
-                                                )
+                Box {
+                    Column {
+                        Divider(modifier = Modifier.padding(start = 10.dp, end = 20.dp))
+                        LazyRow {
+                            if (result?.daily != null) {
+                                items(result?.daily!!.size) { index ->
+                                    result?.daily!![index]?.let {
+                                        Column(
+                                            modifier = Modifier.padding(
+                                                start = 10.dp,
+                                                end = 20.dp,
+                                                top = 20.dp,
+                                                bottom = 20.dp
+                                            ),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            if (index == 0) {
                                                 Text(
-                                                    text = "${it.textDay}",
+                                                    text = "今天",
                                                     fontSize = 20.sp,
                                                     color = Color.White
                                                 )
-                                                Spacer(modifier = Modifier.width(10.dp))
+                                            } else {
                                                 Text(
-                                                    text = " ${it.tempMin}℃",
-                                                    fontSize = 20.sp,
-                                                    color = Color.White
-                                                )
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                Text(
-                                                    text = "${it.tempMax}℃",
+                                                    text = "${DateUtils.getDayOfWeek(it.date)}",
                                                     fontSize = 20.sp,
                                                     color = Color.White
                                                 )
                                             }
+                                            Spacer(modifier = Modifier.size(10.dp))
+                                            Icon(
+                                                painterResource(id = getIconOfWeather(it.iconDay ?: " ")),
+                                                contentDescription = null,
+                                                tint = Color.White,
+                                                modifier = Modifier.size(22.dp)
+                                            )
+                                            Spacer(modifier = Modifier.size(10.dp))
+                                            Text(
+                                                text = "${it.textDay}",
+                                                fontSize = 20.sp,
+                                                color = Color.White
+                                            )
+                                            Spacer(modifier = Modifier.size(10.dp))
+                                            Text(
+                                                text = " ${it.tempMin}~${it.tempMax}℃",
+                                                fontSize = 20.sp,
+                                                color = Color.White
+                                            )
+
                                         }
                                     }
                                 }
-
                             }
+
                         }
-
-
                     }
+
+
+                }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 10.dp, end = 20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                     onClick = {
-
-                }) {
+                    }) {
                     Text(text = "查看更多天气")
                 }
 
 
-
-                }
             }
         }
+    }
 }

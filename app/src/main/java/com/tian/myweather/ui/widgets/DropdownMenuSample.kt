@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tian.myweather.data.CityMap
-import com.tian.myweather.ui.viewmodel.DayWeatherModel
 import com.tian.myweather.ui.viewmodel.HourWeatherModel
 import com.tian.myweather.ui.viewmodel.NowWeatherModel
+import com.tian.myweather.ui.viewmodel.WeekWeatherModel
 
 /**
  * @Author: tian7
@@ -48,19 +48,19 @@ import com.tian.myweather.ui.viewmodel.NowWeatherModel
 @Composable
 fun DropdownMenuSample(
     modifier: Modifier,
-    dayWeatherModel: DayWeatherModel,
+    weekWeatherModel: WeekWeatherModel,
     hourWeatherModel: HourWeatherModel,
     nowWeatherModel: NowWeatherModel
 ) {
 
     var expanded by remember { mutableStateOf(false) }
     val cityMap = CityMap.getCityMap()
-    var selectedId by remember { dayWeatherModel.cityId }
+    var selectedId by remember { weekWeatherModel.cityId }
 
     LaunchedEffect(selectedId) {
-        dayWeatherModel.getDayWeather(selectedId)
-        hourWeatherModel.getTimeWeather(selectedId)
-        dayWeatherModel.cityName.value = cityMap[selectedId]!!
+        weekWeatherModel.getWeekWeather(selectedId)
+        hourWeatherModel.getHourWeather(selectedId)
+        weekWeatherModel.cityName.value = cityMap[selectedId]!!
         nowWeatherModel.getNowWeather(selectedId)
     }
 
@@ -91,7 +91,7 @@ fun DropdownMenuSample(
                             text = { Text(text = it.value, color = Color.Black) },
                             onClick = {
                                 selectedId = it.key
-                                dayWeatherModel.cityId.value = it.key
+                                weekWeatherModel.cityId.value = it.key
                                 hourWeatherModel.cityId.value = it.key
                                 expanded = false
                             },

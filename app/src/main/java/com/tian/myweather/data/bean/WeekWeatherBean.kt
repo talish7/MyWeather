@@ -9,19 +9,14 @@ import com.google.gson.annotations.SerializedName
  * @Description: 七天天气bean
  */
 
-class WeekWeatherBean {
+data class WeekWeatherBean (
     @SerializedName("code")
-    var code: String? = null
+    val code: String? = null,
 
     @SerializedName("updateTime")
-    var updateTime: String? = null
+    val updateTime: String? = null,
 
     @SerializedName("daily")
-    var daily: List<DayWeatherBean>? = null
+    val daily: List<DailyBean>? = null,
 
-    override fun toString(): String {
-        return "WeekWeatherBean(code=$code, updateTime=$updateTime, daily=$daily)"
-    }
-
-
-}
+)

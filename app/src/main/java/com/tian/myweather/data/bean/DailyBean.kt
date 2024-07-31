@@ -9,61 +9,55 @@ import com.google.gson.annotations.SerializedName
  * @Description: 每日天气bean
  */
 
-class DayWeatherBean {
+data class DailyBean(
 
     @SerializedName("fxDate")
-    var date: String? = null
+    val date: String? = null,
 
     //日出时间
     @SerializedName("sunrise")
-    var sunrise: String? = null
+    val sunrise: String? = null,
 
     //日落时间
     @SerializedName("sunset")
-    var sunset: String? = null
+    val sunset: String? = null,
 
     //月升时间
     @SerializedName("moonrise")
-    var moonrise: String? = null
+    val moonrise: String? = null,
     //月落时间
     @SerializedName("moonset")
-    var moonset: String? = null
+    val moonset: String? = null,
 
     //最高温度
     @SerializedName("tempMax")
-    var tempMax: String? = null
+    val tempMax: String? = null,
 
     //最低温度
     @SerializedName("tempMin")
-    var tempMin: String? = null
+    val tempMin: String? = null,
 
     //白天天气图标
     @SerializedName("iconDay")
-    var iconDay: String? = null
+    val iconDay: String? = null,
 
     //白天天气描述
     @SerializedName("textDay")
-    var textDay: String? = null
+    val textDay: String? = null,
 
     //夜间天气图标
     @SerializedName("iconNight")
-    var iconNight: String? = null
+    val iconNight: String? = null,
 
     //夜间天气文字描述
     @SerializedName("textNight")
-    var textNight: String? = null
+    val textNight: String? = null,
 
     //白天风向360角度
     @SerializedName("wind360Day")
-    var wind360: String? = null
+    val wind360: String? = null,
 
     //白天风向
     @SerializedName("windDirDay")
-    var windDir: String? = null
-
-    override fun toString(): String {
-        return "DayWeatherBean(date=$date, sunrise=$sunrise, sunset=$sunset, moonrise=$moonrise, moonset=$moonset, tempMax=$tempMax, tempMin=$tempMin, iconDay=$iconDay, textDay=$textDay, iconNight=$iconNight, textNight=$textNight, wind360=$wind360, windDir=$windDir)"
-    }
-
-
-}
+    val windDir: String? = null
+)
