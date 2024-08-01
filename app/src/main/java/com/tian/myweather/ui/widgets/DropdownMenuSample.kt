@@ -64,47 +64,45 @@ fun DropdownMenuSample(
         nowWeatherModel.getNowWeather(selectedId)
     }
 
-    Box(modifier = modifier) {
-        Row {
-            Column {
-                Row(
-                    modifier= Modifier.clickable {
-                        expanded = true
-                    },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(text = cityMap[selectedId]!!, color = Color.White, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.width(60.dp))
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "Setting", tint = Color.White)
-                    }
-                }
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier.clickable {
+                expanded = true
+            },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = cityMap[selectedId]!!, color = Color.White, fontSize = 14.sp)
+            Spacer(modifier = Modifier.width(60.dp))
+            IconButton(onClick = { expanded = true }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "Setting",
+                    tint = Color.White
+                )
+            }
+        }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+        ) {
+            cityMap.forEach {
+                DropdownMenuItem(
+                    text = { Text(text = it.value, color = Color.Black) },
+                    onClick = {
+                        selectedId = it.key
+                        weekWeatherModel.cityId.value = it.key
+                        hourWeatherModel.cityId.value = it.key
                         expanded = false
                     },
-                ) {
-                    cityMap.forEach {
-                        DropdownMenuItem(
-                            text = { Text(text = it.value, color = Color.Black) },
-                            onClick = {
-                                selectedId = it.key
-                                weekWeatherModel.cityId.value = it.key
-                                hourWeatherModel.cityId.value = it.key
-                                expanded = false
-                            },
-                        )
-                    }
-                }
+                )
             }
         }
 
 
     }
-
-
 
 
 }
