@@ -1,6 +1,6 @@
 package com.tian.myweather.data
 
-import com.tian.myweather.config.Config.BASE_URL
+import com.tian.myweather.config.Config.WEATHER_URL
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.internal.cache.CacheInterceptor
@@ -29,7 +29,7 @@ object RetrofitManager {
         return Retrofit.Builder()
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl ?: BASE_URL)
+            .baseUrl(baseUrl ?: WEATHER_URL)
             .build()
             .create(serviceClass)
     }

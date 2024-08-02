@@ -62,6 +62,8 @@ fun DropdownMenuSample(
         hourWeatherModel.getHourWeather(selectedId)
         weekWeatherModel.cityName.value = cityMap[selectedId]!!
         nowWeatherModel.getNowWeather(selectedId)
+        weekWeatherModel.getAir(selectedId)
+
     }
 
     Column(modifier = modifier) {

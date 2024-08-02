@@ -1,5 +1,8 @@
 package com.tian.myweather.data
 
+import com.tian.myweather.config.Config.AIR_URL
+import com.tian.myweather.config.Config.WEATHER_URL
+import com.tian.myweather.data.bean.AirBean
 import com.tian.myweather.data.bean.HourWeatherBean
 import com.tian.myweather.data.bean.HourlyBean
 import com.tian.myweather.data.bean.NowWeatherBean
@@ -17,7 +20,10 @@ import com.tian.myweather.ui.viewmodel.NowWeatherModel
 object DataRepository: Api {
 
     private val weatherService by lazy {
-        RetrofitManager.getService(Api::class.java)
+        RetrofitManager.getService(Api::class.java,WEATHER_URL)
+    }
+    private val airService by lazy {
+        RetrofitManager.getService(Api::class.java,AIR_URL)
     }
 
     override suspend fun getWeekWeather(
@@ -39,6 +45,13 @@ object DataRepository: Api {
         key: String
     ): NowWeatherBean {
         return weatherService.getNowWeather(city, key)
+    }
+
+    override suspend fun getNowAir(
+        city: String,
+        key: String
+    ): AirBean {
+        return airService.getNowAir(city, key)
     }
 
 

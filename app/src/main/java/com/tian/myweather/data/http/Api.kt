@@ -1,5 +1,6 @@
 package com.tian.myweather.data.http
 
+import com.tian.myweather.data.bean.AirBean
 import com.tian.myweather.data.bean.HourWeatherBean
 import com.tian.myweather.data.bean.HourlyBean
 import com.tian.myweather.data.bean.NowWeatherBean
@@ -42,4 +43,13 @@ interface Api {
         @Query("location") city: String,
         @Query("key") key: String,
     ): NowWeatherBean
+
+    /**
+     * 获取实时空气质量信息
+     */
+    @GET("now")
+    suspend fun getNowAir(
+        @Query("location") city: String,
+        @Query("key") key: String,
+    ): AirBean
 }

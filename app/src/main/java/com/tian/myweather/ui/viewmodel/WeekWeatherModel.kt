@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tian.myweather.config.Config.API_KEY
 import com.tian.myweather.data.DataRepository
+import com.tian.myweather.data.bean.AirBean
 import com.tian.myweather.data.bean.DailyBean
+import com.tian.myweather.data.bean.NowAirBean
 import com.tian.myweather.data.bean.WeekWeatherBean
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +30,10 @@ class WeekWeatherModel: ViewModel() {
 
     val cityId = mutableStateOf("101010100")
     val cityName = mutableStateOf("北京")
-    
+
+    private val _nowAir = MutableStateFlow<NowAirBean?>(null)
+    val nowAir = _nowAir.asStateFlow()
+
     fun getWeekWeather(city: String){
         viewModelScope.launch {
             val response = DataRepository.getWeekWeather(city, API_KEY)
@@ -37,6 +42,17 @@ class WeekWeatherModel: ViewModel() {
                     _todayWeather.value= response.daily?.get(0)
                 }
                 _weekWeather.value = response
+            }else{
+                dLog("${response.code}请求失败")
+            }
+        }
+    }
+
+    fun getAir(city: String){
+        viewModelScope.launch {
+            val response = DataRepository.getNowAir(city, API_KEY)
+            if (response.code == "200") {
+                _nowAir.value = response.nowAir
             }else{
                 dLog("${response.code}请求失败")
             }
