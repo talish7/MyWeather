@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tian.myweather.R
+import com.tian.myweather.data.RetrofitManager
 import com.tian.myweather.data.bean.DailyBean
 import com.tian.myweather.ui.viewmodel.HourWeatherModel
 import com.tian.myweather.ui.viewmodel.NowWeatherModel
@@ -69,15 +70,19 @@ fun MainPage(
     val hourWeather by hourWeatherModel.hourWeather.collectAsState()
     //实时
     val nowWeather by nowWeatherModel.nowWeather.collectAsState()
+    //空气
+    val air by weekWeatherModel.nowAir.collectAsState()
 
     var cityName by remember {
         weekWeatherModel.cityName
     }
 
+
     LaunchedEffect(Unit) {
         weekWeatherModel.getWeekWeather("101010100")
         hourWeatherModel.getHourWeather("101010100")
         nowWeatherModel.getNowWeather("101010100")
+        weekWeatherModel.getAir("101010100")
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -125,12 +130,21 @@ fun MainPage(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 20.dp),
+                    .padding(end = 20.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                 onClick = {
+
                 }) {
                 Text(text = "查看更多天气")
             }
+
+            Spacer(modifier = Modifier.size(10.dp))
+            AirQualityPage(
+                 modifier = Modifier
+                     .fillMaxSize()
+                     .padding(end = 20.dp),
+                air = air
+            )
 
 
         }
