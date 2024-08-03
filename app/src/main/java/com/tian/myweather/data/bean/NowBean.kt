@@ -11,7 +11,10 @@ data class NowBean (
     val weather: String? = null,
 
     @SerializedName("obsTime")
-    val obsTime: String? = null
+    val obsTime: String? = null,
+
+    @SerializedName("icon")
+    val icon: String? = null
 
 )
 

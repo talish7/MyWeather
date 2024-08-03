@@ -55,12 +55,12 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
                     ) {
                         Text(
                             text = "现在",
-                            fontSize = 20.sp,
+                            fontSize = 16.sp,
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.size(10.dp))
                         Icon(
-                            painterResource(id = getIconOfWeather(" ")),
+                            painterResource(id = getIconOfWeather(it.icon ?: " ")),
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(22.dp)
@@ -69,7 +69,7 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
 
                         Text(
                             text = "${it.temp}℃",
-                            fontSize = 20.sp,
+                            fontSize = 16.sp,
                             color = Color.White
                         )
                     }
@@ -90,7 +90,7 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
                                             it.time!!
                                         )
                                     }",
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                     color = Color.White
                                 )
                             }
@@ -104,7 +104,7 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
                             Spacer(modifier = Modifier.size(10.dp))
                             Text(
                                 text = "${it.temp ?: " "}℃",
-                                fontSize = 20.sp,
+                                fontSize = 16.sp,
                                 color = Color.White
                             )
                         }
