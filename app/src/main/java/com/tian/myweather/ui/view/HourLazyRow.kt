@@ -1,5 +1,6 @@
 package com.tian.myweather.ui.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -27,7 +28,7 @@ import com.tian.myweather.utils.getIconOfWeather
  * @Description: 描述
  */
 @Composable
-fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWeatherBean?) {
+fun HourLazyRow(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWeatherBean?) {
     Column {
         Text(
             text = "上次更新时间: ${
@@ -45,13 +46,18 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
             nowWeather?.now?.let {
                 item {
                     Column(
-                        modifier = Modifier.padding(
-                            start = 10.dp,
-                            end = 20.dp,
-                            top = 20.dp,
-                            bottom = 20.dp
-                        ),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier
+                            .clickable {
+
+                            }
+                            .padding(
+                                start = 10.dp,
+                                end = 20.dp,
+                                top = 20.dp,
+                                bottom = 20.dp)
+                           ,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+
                     ) {
                         Text(
                             text = "现在",
@@ -80,7 +86,12 @@ fun HourPage(modifier: Modifier,hourWeather: HourWeatherBean?,nowWeather: NowWea
                 items(it.size) { index ->
                     hourWeather!!.hourly?.get(index)?.let {
                         Column(
-                            modifier = Modifier.padding(20.dp),
+                            modifier = Modifier.padding(
+                                start = 10.dp,
+                                end = 20.dp,
+                                top = 20.dp,
+                                bottom = 20.dp
+                            ),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (it.time != null) {

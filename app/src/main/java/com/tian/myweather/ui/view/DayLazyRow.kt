@@ -27,8 +27,7 @@ import com.tian.myweather.utils.getIconOfWeather
  * @Description: 描述
  */
 @Composable
-fun WeekPage(modifier: Modifier,weekWeather: WeekWeatherBean?) {
-    Box {
+fun DayLazyRow(modifier: Modifier,weekWeather: WeekWeatherBean?) {
         Column {
             Divider(modifier = Modifier.padding(start = 10.dp, end = 20.dp))
             LazyRow {
@@ -47,13 +46,13 @@ fun WeekPage(modifier: Modifier,weekWeather: WeekWeatherBean?) {
                                 if (index == 0) {
                                     Text(
                                         text = "今天",
-                                        fontSize = 20.sp,
+                                        fontSize = 16.sp,
                                         color = Color.White
                                     )
                                 } else {
                                     Text(
                                         text = "${DateUtils.getDayOfWeek(it.date)}",
-                                        fontSize = 20.sp,
+                                        fontSize = 16.sp,
                                         color = Color.White
                                     )
                                 }
@@ -71,13 +70,13 @@ fun WeekPage(modifier: Modifier,weekWeather: WeekWeatherBean?) {
                                 Spacer(modifier = Modifier.size(10.dp))
                                 Text(
                                     text = "${it.textDay}",
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                     color = Color.White
                                 )
                                 Spacer(modifier = Modifier.size(10.dp))
                                 Text(
                                     text = " ${it.tempMin}~${it.tempMax}℃",
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                     color = Color.White
                                 )
 
@@ -90,5 +89,4 @@ fun WeekPage(modifier: Modifier,weekWeather: WeekWeatherBean?) {
         }
 
 
-    }
 }
