@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tian.myweather.ui.view.main.MainPage
 import com.tian.myweather.ui.view.home.HomePage
 import com.tian.myweather.ui.view.web.WebPage
 
@@ -25,7 +24,7 @@ fun NavGraph(navHostController: NavHostController, paddingValues: PaddingValues)
         modifier = Modifier.padding(paddingValues)
     ){
         composable(Route.MAIN){
-            MainPage(navHostController)
+//            MainPage(navHostController)
         }
         composable(Route.HOME){
             HomePage(navHostController)

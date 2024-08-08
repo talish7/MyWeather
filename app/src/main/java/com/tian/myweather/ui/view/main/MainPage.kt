@@ -16,13 +16,13 @@ import com.tian.myweather.navigation.NavGraph
  * @Date: on 2024/8/3: 13: 09
  * @Description: 描述
  */
-@Composable
-fun MainPage(navHostController: NavHostController) {
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    val destination = navBackStackEntry?.destination
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        NavGraph(navHostController, it)
-    }
-}
+//@Composable
+//fun MainPage(navHostController: NavHostController) {
+//    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+//    val destination = navBackStackEntry?.destination
+//    Scaffold(
+//        modifier = Modifier.fillMaxSize(),
+//    ) {
+//        NavGraph(navHostController, it)
+//    }
+//}

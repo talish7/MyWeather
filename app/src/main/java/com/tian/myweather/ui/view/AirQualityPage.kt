@@ -31,24 +31,22 @@ fun AirQualityPage(modifier: Modifier,air: NowAirBean?) {
         Text("空气质量",color = Color.White, fontSize = 18.sp)
         Spacer(modifier = Modifier.height(5.dp))
         Surface(
-            modifier = modifier, color = Color.Gray,
-            shape =  RoundedCornerShape(20.dp)
-
+            modifier = modifier,
+            color = Color.Gray,
+            shape =  RoundedCornerShape(20.dp),
         ){
-            Column(verticalArrangement = Arrangement.Center,
-                   modifier = Modifier.padding(10.dp)
-                ) {
-                ShowAqi(value = air?.aqi?.toInt() ?: 0, maxValue = 500)
-                Text("AQI:${air?.aqi ?: "0"}",color = Color.White, fontSize = 15.sp)
-                Text(text = "${air?.quality ?: ""}",color = Color.White, fontSize = 15.sp)
-            }
             Column(
-                modifier = Modifier,
+                modifier = Modifier.padding(start = 60.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+//                air?.aqi?.let { Text(text = "AQI:$it",color = Color.White, fontSize = 15.sp) }
+                air?.quality?.let { Text(text = "空气质量: $it",color = Color.White, fontSize = 18.sp) }
+             }
+            Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                 Row {
-
                     Column {
                         Text("PM2.5",color = Color.White)
                         Spacer(modifier = Modifier.height(5.dp))
